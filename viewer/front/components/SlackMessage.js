@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import ReactDOMServer from "react-dom/server";
 import ChannelName from "./ChannelName";
+import { Twemoji } from "react-emoji-render";
 import { Link } from "react-router-dom";
 import MessagesType from "../constants/MessagesType";
 
@@ -38,6 +40,9 @@ export default class extends Component {
     };
     const specialCommand = command => `@${command}`;
     const uriLink = uri => `<a href="${uri}" target="_blank">${uri}</a>`;
+    const addEmoji = text => {
+      return ReactDOMServer.renderToStaticMarkup(<Twemoji text={text} />);
+    };
     if (text) {
       return text
         .replace(/<#([0-9A-Za-z]+)>/, (m, id) => channelLink(id))
@@ -49,7 +54,8 @@ export default class extends Component {
         .replace(/<!(channel|everyone|group)>/gi, (m, command) =>
           specialCommand(command)
         )
-        .replace(/<(https?:\/\/[^>]*)>/gi, (m, uri) => uriLink(entity(uri)));
+        .replace(/<(https?:\/\/[^>]*)>/gi, (m, uri) => uriLink(entity(uri)))
+        .replace(/(:\S+:)/g, (m, emoji) => addEmoji(emoji));
     }
     return text;
   }
