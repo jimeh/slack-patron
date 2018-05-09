@@ -41,7 +41,10 @@ export default class extends Component {
     const specialCommand = command => `@${command}`;
     const uriLink = uri => `<a href="${uri}" target="_blank">${uri}</a>`;
     const addEmoji = text => {
-      return ReactDOMServer.renderToStaticMarkup(<Twemoji text={text} />);
+      const options = { className: "emoji" };
+      return ReactDOMServer.renderToStaticMarkup(
+        <Twemoji svg text={text} options={options} />
+      );
     };
     if (text) {
       return text
